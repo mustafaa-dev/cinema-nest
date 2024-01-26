@@ -9,6 +9,6 @@ export class SpokenLanguagesRepository extends AbstractRepository<SpokenLanguage
     private readonly spokenLanguagesRepository: Repository<SpokenLanguage>,
     entityManager: EntityManager,
   ) {
-    super(spokenLanguagesRepository, entityManager);
+    super(spokenLanguagesRepository, entityManager, 'Language Not Found');
   }
 }

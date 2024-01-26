@@ -9,6 +9,10 @@ export class ProductionCompanyRepository extends AbstractRepository<ProductionCo
     private readonly productionCompanyRepository: Repository<ProductionCompany>,
     entityManager: EntityManager,
   ) {
-    super(productionCompanyRepository, entityManager);
+    super(
+      productionCompanyRepository,
+      entityManager,
+      'Production Company Not Found',
+    );
   }
 }

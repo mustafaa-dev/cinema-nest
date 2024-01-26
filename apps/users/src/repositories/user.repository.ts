@@ -5,9 +5,9 @@ import { EntityManager, Repository } from 'typeorm';
 
 export class UserRepository extends AbstractRepository<User> {
   constructor(
-    @InjectRepository(User) private readonly userRepository: Repository<User>,
+    @InjectRepository(User) userRepository: Repository<User>,
     entityManager: EntityManager,
   ) {
-    super(userRepository, entityManager);
+    super(userRepository, entityManager, 'User Not Found');
   }
 }

@@ -6,9 +6,9 @@ import { Genre } from './genre.entity';
 export class GenresRepository extends AbstractRepository<Genre> {
   constructor(
     @InjectRepository(Genre)
-    private readonly genresRepository: Repository<Genre>,
+    genresRepository: Repository<Genre>,
     entityManager: EntityManager,
   ) {
-    super(genresRepository, entityManager);
+    super(genresRepository, entityManager, 'Genre Not Found');
   }
 }

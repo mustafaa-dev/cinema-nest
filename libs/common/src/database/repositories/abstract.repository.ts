@@ -9,6 +9,7 @@ export abstract class AbstractRepository<
   protected constructor(
     private readonly entityRepository: Repository<TEntity>,
     private readonly entityManager: EntityManager,
+    private notFoundMsg: string,
   ) {}
 
   async create(entity: TEntity): Promise<TEntity> {
@@ -17,7 +18,7 @@ export abstract class AbstractRepository<
 
   async findOne(where: object): Promise<TEntity> {
     const entity = await this.entityRepository.findOne({ where });
-    if (!entity) throw new NotFoundException('Not Found In Database');
+    if (!entity) throw new NotFoundException(this.notFoundMsg);
     return entity;
   }
 
@@ -26,7 +27,7 @@ export abstract class AbstractRepository<
     update: QueryDeepPartialEntity<TEntity>,
   ) {
     const entity = await this.entityRepository.update(where, update);
-    if (!entity.affected) throw new NotFoundException('Not Found In Database');
+    if (!entity.affected) throw new NotFoundException(this.notFoundMsg);
     return this.findOne(where);
   }
 

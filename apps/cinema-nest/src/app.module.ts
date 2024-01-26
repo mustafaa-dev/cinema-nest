@@ -9,6 +9,7 @@ import { AuthModule } from 'apps/auth/src/auth.module';
 import { EventEmitterModule } from '@nestjs/event-emitter';
 import { MailingModule } from '../../mailing/src/mailing.module';
 import { MoviesModule } from '../../movies/src/movies.module';
+import { VideosModule } from 'apps/videos/src/videos.module';
 
 @Module({
   imports: [
@@ -30,6 +31,7 @@ import { MoviesModule } from '../../movies/src/movies.module';
     DatabaseModule,
     MailingModule,
     MoviesModule,
+    VideosModule,
   ],
   controllers: [AppController],
   providers: [AppService],

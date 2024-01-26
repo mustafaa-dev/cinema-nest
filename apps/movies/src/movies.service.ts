@@ -11,6 +11,7 @@ import {
   CHECK_PRODUCTION_COUNTRIES,
   CHECK_SPOKEN_LANGUAGES,
 } from '@app/common';
+import { User } from 'apps/users/src/entities/user.entity';
 
 @Injectable()
 export class MoviesService {
@@ -31,7 +32,7 @@ export class MoviesService {
     return movies;
   }
 
-  async addMovie({ id }: any) {
+  async addMovie({ id }: any, user: User) {
     const url = `https://api.themoviedb.org/3/movie/${id}?language=en-US`;
     const movie = this.filterMovieData(await this.callApi(url));
     const newMovie = new Movie();
@@ -47,6 +48,7 @@ export class MoviesService {
         await this.checkProductionCompanies(movie);
       newMovie.production_countries = await this.checkProductionCountry(movie);
       newMovie.spoken_languages = await this.checkSpokenLanguages(movie);
+      newMovie.user = user;
       await this.checkMovie(movie);
       return await this.movieRepository.create(newMovie);
     } catch (error) {

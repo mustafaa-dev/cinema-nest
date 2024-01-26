@@ -6,9 +6,13 @@ import { ProductionCountry } from './production-country.entity';
 export class ProductionCountryRepository extends AbstractRepository<ProductionCountry> {
   constructor(
     @InjectRepository(ProductionCountry)
-    private readonly productionCountryRepository: Repository<ProductionCountry>,
+    productionCountryRepository: Repository<ProductionCountry>,
     entityManager: EntityManager,
   ) {
-    super(productionCountryRepository, entityManager);
+    super(
+      productionCountryRepository,
+      entityManager,
+      'Production Country not Found',
+    );
   }
 }

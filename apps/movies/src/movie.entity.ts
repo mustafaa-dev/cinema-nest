@@ -1,27 +1,33 @@
 import { AbstractEntity } from '@app/common';
-import { Column, Entity, JoinTable, ManyToMany, ManyToOne } from 'typeorm';
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  JoinTable,
+  ManyToMany,
+  ManyToOne,
+  OneToOne,
+} from 'typeorm';
 import { MoviesCollection } from './collections/collections.entity';
 import { Genre } from './genres/genre.entity';
 import { ProductionCompany } from './companies/production-company.entity';
 import { ProductionCountry } from './countries/production-country.entity';
 import { SpokenLanguage } from './languages/spoken-language.entity';
+import { User } from 'apps/users/src/entities/user.entity';
+import { Video } from 'apps/videos/src/video.entity';
 
 @Entity('movies')
 export class Movie extends AbstractEntity<Movie> {
   @Column()
   adult: boolean;
-
   @Column()
   budget: number;
-
   @Column()
   'tmdb_id': number;
-
   @Column()
   imdb_id: string;
   @Column()
   original_language: string;
-
   @Column()
   original_title: string;
   @Column({ type: 'text' })
@@ -65,4 +71,11 @@ export class Movie extends AbstractEntity<Movie> {
   @ManyToMany(() => SpokenLanguage)
   @JoinTable()
   spoken_languages: SpokenLanguage[];
+
+  @ManyToOne(() => User, (user) => user.movies)
+  user: User;
+
+  @OneToOne(() => Video)
+  @JoinColumn()
+  video: Video;
 }

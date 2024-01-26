@@ -8,6 +8,6 @@ export class MovieRepository extends AbstractRepository<Movie> {
     @InjectRepository(Movie) movieRepository: Repository<Movie>,
     entityManager: EntityManager,
   ) {
-    super(movieRepository, entityManager);
+    super(movieRepository, entityManager, 'Movie Not Found');
   }
 }

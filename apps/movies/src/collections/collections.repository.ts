@@ -9,6 +9,10 @@ export class MovieCollectionRepository extends AbstractRepository<MoviesCollecti
     private readonly movieCollectionRepository: Repository<MoviesCollection>,
     entityManager: EntityManager,
   ) {
-    super(movieCollectionRepository, entityManager);
+    super(
+      movieCollectionRepository,
+      entityManager,
+      'Movie Collection Not found',
+    );
   }
 }

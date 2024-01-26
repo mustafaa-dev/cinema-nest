@@ -1,7 +1,8 @@
-import { BeforeInsert, Column, Entity } from 'typeorm';
+import { BeforeInsert, Column, Entity, OneToMany } from 'typeorm';
 import { hash } from 'bcryptjs';
 import { AbstractEntity } from '@app/common';
 import { addMinutes } from 'date-fns';
+import { Movie } from 'apps/movies/src/movie.entity';
 
 @Entity('users')
 export class User extends AbstractEntity<User> {
@@ -25,6 +26,9 @@ export class User extends AbstractEntity<User> {
 
   //   @Column()
   //   role: string;
+
+  @OneToMany(() => Movie, (movie) => movie.user)
+  movies: Movie[];
 
   @BeforeInsert()
   async saving() {
