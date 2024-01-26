@@ -7,6 +7,9 @@ import { DatabaseModule, LoggerModule } from '@app/common';
 import { UsersModule } from 'apps/users/src/users.module';
 import { AuthModule } from 'apps/auth/src/auth.module';
 import { EventEmitterModule } from '@nestjs/event-emitter';
+import { MailingModule } from '../../mailing/src/mailing.module';
+import { MoviesModule } from '../../movies/src/movies.module';
+
 @Module({
   imports: [
     EventEmitterModule.forRoot(),
@@ -25,6 +28,8 @@ import { EventEmitterModule } from '@nestjs/event-emitter';
     UsersModule,
     AuthModule,
     DatabaseModule,
+    MailingModule,
+    MoviesModule,
   ],
   controllers: [AppController],
   providers: [AppService],

@@ -1,8 +1,8 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { EntityClassOrSchema } from '@nestjs/typeorm/dist/interfaces/entity-class-or-schema.type';
-import { config } from './config/data-source';
 import { ConfigModule } from '@nestjs/config';
+import { config } from '@app/common/database/config';
 
 @Module({
   // imports: [
@@ -25,7 +25,13 @@ import { ConfigModule } from '@nestjs/config';
       isGlobal: true,
       envFilePath: ['.env'],
     }),
-    TypeOrmModule.forRoot(config),
+    TypeOrmModule.forRootAsync({
+      useFactory: () => ({
+        ...config,
+        autoLoadEntities: true,
+        synchronize: true,
+      }),
+    }),
   ],
   providers: [],
   exports: [],

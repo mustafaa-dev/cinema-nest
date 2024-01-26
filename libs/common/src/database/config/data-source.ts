@@ -1,7 +1,7 @@
 import { DataSource, DataSourceOptions } from 'typeorm';
 import * as path from 'path';
 import { DB_HOST, DB_NAME, DB_PASSWORD, DB_PORT, DB_USERNAME } from './db';
-console.log(__dirname);
+
 export const config: DataSourceOptions = {
   host: DB_HOST,
   type: 'mysql',
@@ -9,9 +9,25 @@ export const config: DataSourceOptions = {
   password: DB_PASSWORD,
   port: +DB_PORT,
   database: DB_NAME,
-  entities: [path.join('apps', '**', '*.entity{.js,.ts}')],
-  migrations: [path.join('migrations', '*{.js,.ts}')],
-  migrationsRun: false,
+  migrations:
+    // [path.join('dist', '**', '*{.js}')],
+    [
+      path.join(
+        __dirname,
+        '..',
+        '..',
+        '..',
+        '..',
+        '..',
+        'apps',
+        '**',
+        'migrations',
+        '**',
+        '*{.js,.ts}',
+      ),
+    ],
+
+  // migrationsRun: true,
   synchronize: false,
 };
 

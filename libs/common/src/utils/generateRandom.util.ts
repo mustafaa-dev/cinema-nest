@@ -6,6 +6,5 @@ export const generateNumber = async function generateRandomNumber(
   const randomUUID = uuidv4();
   const randomPart = randomUUID.replace(/-/g, '');
   const timestamp = new Date().getTime().toString();
-
   return (timestamp + randomPart).slice(0, len);
 };

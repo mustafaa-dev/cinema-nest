@@ -4,7 +4,7 @@
   "sourceRoot": "apps/cinema-nest/src",
   "compilerOptions": {
     "deleteOutDir": true,
-    "webpack": true,
+    "webpack": false,
     "tsConfigPath": "apps/cinema-nest/tsconfig.app.json"
   },
   "projects": {
@@ -42,6 +42,24 @@
       "sourceRoot": "apps/users/src",
       "compilerOptions": {
         "tsConfigPath": "apps/users/tsconfig.app.json"
+      }
+    },
+    "mailing": {
+      "type": "application",
+      "root": "apps/mailing",
+      "entryFile": "main",
+      "sourceRoot": "apps/mailing/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/mailing/tsconfig.app.json"
+      }
+    },
+    "movies": {
+      "type": "application",
+      "root": "apps/movies",
+      "entryFile": "main",
+      "sourceRoot": "apps/movies/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/movies/tsconfig.app.json"
       }
     }
   },

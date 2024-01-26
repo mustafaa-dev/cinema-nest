@@ -16,7 +16,7 @@ export abstract class AbstractRepository<
   }
 
   async findOne(where: object): Promise<TEntity> {
-    const entity = await this.entityRepository.findOne(where);
+    const entity = await this.entityRepository.findOne({ where });
     if (!entity) throw new NotFoundException('Not Found In Database');
     return entity;
   }
@@ -27,7 +27,7 @@ export abstract class AbstractRepository<
   ) {
     const entity = await this.entityRepository.update(where, update);
     if (!entity.affected) throw new NotFoundException('Not Found In Database');
-    return this.findOne({ where });
+    return this.findOne(where);
   }
 
   async find(where: FindOptionsWhere<TEntity>) {
@@ -36,5 +36,9 @@ export abstract class AbstractRepository<
 
   async findOneAndDelete(where: FindOptionsWhere<TEntity>) {
     return await this.entityRepository.delete(where);
+  }
+
+  async checkOne(where: FindOptionsWhere<TEntity>) {
+    return await this.entityRepository.findOneBy(where);
   }
 }
