@@ -4,13 +4,16 @@ import { Column, Entity, JoinColumn, OneToOne } from 'typeorm';
 @Entity('videos')
 export class Video extends AbstractEntity<Video> {
   @Column()
-  title: string;
+  filename: string;
+
+  @Column()
+  originalname: string;
 
   @Column()
   size: string;
 
   @Column()
-  extension: string;
+  mimetype: string;
 
   @Column()
   path: string;

@@ -10,8 +10,10 @@ import {
   CHECK_PRODUCTION_COMPANIES,
   CHECK_PRODUCTION_COUNTRIES,
   CHECK_SPOKEN_LANGUAGES,
+  UPLOAD_VIDEO,
 } from '@app/common';
 import { User } from 'apps/users/src/entities/user.entity';
+import { Video } from 'apps/videos/src/video.entity';
 
 @Injectable()
 export class MoviesService {
@@ -49,6 +51,7 @@ export class MoviesService {
       newMovie.production_countries = await this.checkProductionCountry(movie);
       newMovie.spoken_languages = await this.checkSpokenLanguages(movie);
       newMovie.user = user;
+      newMovie.video = this.addVideo();
       await this.checkMovie(movie);
       return await this.movieRepository.create(newMovie);
     } catch (error) {
@@ -119,5 +122,11 @@ export class MoviesService {
   }
   async checkSpokenLanguages(movie: any) {
     return (await this.ee.emitAsync(CHECK_SPOKEN_LANGUAGES, movie)).at(0);
+  }
+
+  addVideo() {
+    const newVideo = new Video();
+    this.ee.emit(UPLOAD_VIDEO, newVideo);
+    return newVideo;
   }
 }
