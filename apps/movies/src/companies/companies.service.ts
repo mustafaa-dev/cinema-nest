@@ -25,6 +25,7 @@ export class CompaniesService {
           isValidCompany =
             await this.productionCompaniesRepository.create(isValidCompany);
         }
+        console.log(isValidCompany);
         return isValidCompany;
       }),
     );

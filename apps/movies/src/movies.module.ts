@@ -10,6 +10,7 @@ import { CompaniesModule } from './companies/companies.module';
 import { CountriesModule } from './countries/countries.module';
 import { LanguagesModule } from './languages/languages.module';
 import { EventEmitter2 } from '@nestjs/event-emitter';
+import { MulterModule } from '@nestjs/platform-express';
 
 @Module({
   imports: [
@@ -21,6 +22,9 @@ import { EventEmitter2 } from '@nestjs/event-emitter';
     CountriesModule,
     LanguagesModule,
     EventEmitter2,
+    MulterModule.register({
+      dest: './uploads',
+    }),
   ],
   controllers: [MoviesController],
   providers: [MoviesService, MovieRepository],

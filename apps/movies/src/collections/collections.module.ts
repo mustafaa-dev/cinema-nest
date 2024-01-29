@@ -9,6 +9,6 @@ import { DatabaseModule } from '@app/common';
   imports: [DatabaseModule, DatabaseModule.forFeature([MoviesCollection])],
   controllers: [CollectionsController],
   providers: [CollectionsService, MovieCollectionRepository],
-  exports: [MovieCollectionRepository],
+  exports: [CollectionsService, MovieCollectionRepository],
 })
 export class CollectionsModule {}

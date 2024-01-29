@@ -9,6 +9,6 @@ import { DatabaseModule } from '@app/common';
   imports: [DatabaseModule, DatabaseModule.forFeature([SpokenLanguage])],
   controllers: [LanguagesController],
   providers: [LanguagesService, SpokenLanguagesRepository],
-  exports: [SpokenLanguagesRepository],
+  exports: [LanguagesService, SpokenLanguagesRepository],
 })
 export class LanguagesModule {}

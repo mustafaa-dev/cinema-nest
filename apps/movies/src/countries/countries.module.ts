@@ -9,6 +9,6 @@ import { DatabaseModule } from '@app/common';
   imports: [DatabaseModule, DatabaseModule.forFeature([ProductionCountry])],
   providers: [CountriesService, ProductionCountryRepository],
   controllers: [CountriesController],
-  exports: [ProductionCountryRepository],
+  exports: [CountriesService, ProductionCountryRepository],
 })
 export class CountriesModule {}

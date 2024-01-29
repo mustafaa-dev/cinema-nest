@@ -2,7 +2,7 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 import * as fetch from 'node-fetch';
 import { Movie } from './movie.entity';
 import { MovieRepository } from './movie.repository';
-import { DataSource } from 'typeorm';
+import { DataSource, EntityManager } from 'typeorm';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import {
   CHECK_COLLECTION,
@@ -14,11 +14,23 @@ import {
 } from '@app/common';
 import { User } from 'apps/users/src/entities/user.entity';
 import { Video } from 'apps/videos/src/video.entity';
+import { MovieCollectionRepository } from './collections/collections.repository';
+import { GenresRepository } from './genres/genres.repository';
+import { ProductionCompanyRepository } from './companies/production-company.repository';
+import { SpokenLanguagesRepository } from './languages/spoken-languages.repository';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class MoviesService {
   constructor(
     private readonly movieRepository: MovieRepository,
+    private readonly entityManager: EntityManager,
+    private readonly movieCollectionService: MovieCollectionRepository,
+    private readonly genresRepository: GenresRepository,
+    private readonly productionCompanyRepositories: ProductionCompanyRepository,
+    private readonly productionCountriesRepository: ProductionCompanyRepository,
+    private readonly spokenLanguagesRepository: SpokenLanguagesRepository,
+    private readonly configService: ConfigService,
     private readonly ee: EventEmitter2,
     private dataSource: DataSource,
   ) {}
@@ -34,16 +46,14 @@ export class MoviesService {
     return movies;
   }
 
-  async addMovie({ id }: any, user: User) {
+  async addMovie({ id }: any, user: User, video: Express.Multer.File) {
     const url = `https://api.themoviedb.org/3/movie/${id}?language=en-US`;
     const movie = this.filterMovieData(await this.callApi(url));
-    const newMovie = new Movie();
-    Object.assign(newMovie, movie);
-    const queryRunner = this.dataSource.createQueryRunner();
-    await queryRunner.connect();
-    await queryRunner.startTransaction();
 
-    try {
+    this.entityManager.transaction(async (transactionManager) => {
+      const newMovie = new Movie();
+      Object.assign(newMovie, movie);
+      await this.checkMovie(movie);
       newMovie.belongs_to = await this.checkMovieCollection(movie);
       newMovie.genres = await this.checkMovieGenres(movie);
       newMovie.production_companies =
@@ -51,15 +61,9 @@ export class MoviesService {
       newMovie.production_countries = await this.checkProductionCountry(movie);
       newMovie.spoken_languages = await this.checkSpokenLanguages(movie);
       newMovie.user = user;
-      newMovie.video = this.addVideo();
-      await this.checkMovie(movie);
-      return await this.movieRepository.create(newMovie);
-    } catch (error) {
-      await queryRunner.rollbackTransaction();
-      throw error;
-    } finally {
-      await queryRunner.release();
-    }
+      if (video) newMovie.video = this.addVideo(video);
+      await transactionManager.save(Movie, newMovie);
+    });
   }
 
   async callApi(url: string) {
@@ -124,9 +128,9 @@ export class MoviesService {
     return (await this.ee.emitAsync(CHECK_SPOKEN_LANGUAGES, movie)).at(0);
   }
 
-  addVideo() {
+  addVideo(video: Express.Multer.File) {
     const newVideo = new Video();
-    this.ee.emit(UPLOAD_VIDEO, newVideo);
+    this.ee.emit(UPLOAD_VIDEO, { video, newVideo });
     return newVideo;
   }
 }

@@ -1,8 +1,18 @@
-import { Body, Controller, Get, Post, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Post,
+  UploadedFile,
+  UseGuards,
+  UseInterceptors,
+} from '@nestjs/common';
 import { MoviesService } from './movies.service';
 import { JwtGuard } from 'apps/auth/src/guards/jwt.guard';
 import { CurrentUser } from '@app/common';
 import { User } from 'apps/users/src/entities/user.entity';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { VerifiedGuard } from 'apps/auth/src/guards/verified.guard';
 
 @Controller('movies')
 export class MoviesController {
@@ -14,8 +24,13 @@ export class MoviesController {
   }
 
   @Post('add')
-  @UseGuards(JwtGuard)
-  async addMovie(@Body() id: number, @CurrentUser() user: User) {
-    return await this.moviesService.addMovie(id, user);
+  @UseInterceptors(FileInterceptor('video'))
+  @UseGuards(JwtGuard, VerifiedGuard)
+  async addMovie(
+    @Body() id: number,
+    @UploadedFile() video: Express.Multer.File,
+    @CurrentUser() user: User,
+  ) {
+    return await this.moviesService.addMovie(id, user, video);
   }
 }

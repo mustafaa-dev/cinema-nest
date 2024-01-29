@@ -9,6 +9,6 @@ import { ProductionCompany } from './production-company.entity';
   imports: [DatabaseModule, DatabaseModule.forFeature([ProductionCompany])],
   controllers: [CompaniesController],
   providers: [CompaniesService, ProductionCompanyRepository],
-  exports: [ProductionCompanyRepository],
+  exports: [CompaniesService, ProductionCompanyRepository],
 })
 export class CompaniesModule {}

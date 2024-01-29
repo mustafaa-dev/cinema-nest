@@ -9,6 +9,6 @@ import { Genre } from './genre.entity';
   imports: [DatabaseModule, DatabaseModule.forFeature([Genre])],
   controllers: [GenresController],
   providers: [GenresService, GenresRepository],
-  exports: [GenresRepository],
+  exports: [GenresService, GenresRepository],
 })
 export class GenresModule {}
