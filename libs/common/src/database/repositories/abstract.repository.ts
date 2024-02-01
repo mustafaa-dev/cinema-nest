@@ -17,7 +17,7 @@ export abstract class AbstractRepository<
   }
 
   async findOne(where: object): Promise<TEntity> {
-    const entity = await this.entityRepository.findOne({ where });
+    const entity = await this.entityRepository.findOne(where);
     if (!entity) throw new NotFoundException(this.notFoundMsg);
     return entity;
   }
@@ -26,9 +26,10 @@ export abstract class AbstractRepository<
     where: FindOptionsWhere<TEntity>,
     update: QueryDeepPartialEntity<TEntity>,
   ) {
-    const entity = await this.entityRepository.update(where, update);
-    if (!entity.affected) throw new NotFoundException(this.notFoundMsg);
-    return this.findOne(where);
+    const entity = await this.entityRepository.findOne({ where });
+    if (!entity) throw new NotFoundException('Not found');
+    Object.assign(entity, update);
+    return await this.entityRepository.save(entity);
   }
 
   async find(where: FindOptionsWhere<TEntity>) {

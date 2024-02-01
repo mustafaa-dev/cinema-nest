@@ -1,6 +1,4 @@
 import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
 import { ConfigModule } from '@nestjs/config';
 import * as Joi from 'joi';
 import { DatabaseModule, LoggerModule } from '@app/common';
@@ -9,7 +7,6 @@ import { AuthModule } from 'apps/auth/src/auth.module';
 import { EventEmitterModule } from '@nestjs/event-emitter';
 import { MailingModule } from '../../mailing/src/mailing.module';
 import { MoviesModule } from '../../movies/src/movies.module';
-import { VideosModule } from 'apps/videos/src/videos.module';
 
 @Module({
   imports: [
@@ -31,9 +28,8 @@ import { VideosModule } from 'apps/videos/src/videos.module';
     DatabaseModule,
     MailingModule,
     MoviesModule,
-    VideosModule,
   ],
-  controllers: [AppController],
-  providers: [AppService],
+  controllers: [],
+  providers: [],
 })
 export class AppModule {}

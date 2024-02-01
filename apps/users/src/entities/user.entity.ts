@@ -1,38 +1,38 @@
-import { BeforeInsert, Column, Entity, OneToMany } from 'typeorm';
+import {
+  BeforeInsert,
+  Column,
+  Entity,
+  JoinColumn,
+  OneToMany,
+  OneToOne,
+} from 'typeorm';
 import { hash } from 'bcryptjs';
 import { AbstractEntity } from '@app/common';
-import { addMinutes } from 'date-fns';
-import { Movie } from 'apps/movies/src/movie.entity';
+import { Movie } from '../../../movies/src/entities/movie.entity';
+import { Role } from '../../../auth/src/entities/role.entity';
 
 @Entity('users')
 export class User extends AbstractEntity<User> {
   @Column()
   name: string;
-
   @Column()
   password: string;
-
   @Column({ unique: true })
   email: string;
-
   @Column({ default: false })
   verified: boolean;
-
   @Column({ nullable: true })
   code: number;
-
   @Column({ nullable: true })
   codeExpiration: Date;
-
-  //   @Column()
-  //   role: string;
-
+  @OneToOne(() => Role, { eager: true })
+  @JoinColumn()
+  role: Role;
   @OneToMany(() => Movie, (movie) => movie.user)
   movies: Movie[];
 
   @BeforeInsert()
   async saving() {
     this.password = await hash(this.password, 10);
-    this.codeExpiration = addMinutes(new Date(), 10);
   }
 }

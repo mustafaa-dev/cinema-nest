@@ -1,9 +1,7 @@
 import {
-  REGISTER_NEW_USER,
+  UserLoginDto,
   UserRegistrationDto,
   UserVerificationDto,
-  VALIDATE_USER,
-  VERIFIED,
 } from '@app/common';
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { EventEmitter2 } from '@nestjs/event-emitter';
@@ -14,18 +12,21 @@ import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { sendSuccess } from '@app/common/interfaces/response.interface';
 import { addSeconds } from 'date-fns';
+import { RoleRepository } from './repositories/role.repository';
 
 @Injectable()
 export class AuthService {
   constructor(
     private readonly usersService: UsersService,
+    private readonly roleRepository: RoleRepository,
     private ee: EventEmitter2,
     private configService: ConfigService,
     private readonly jwtService: JwtService,
   ) {}
 
   async register(userRegistrationDto: UserRegistrationDto) {
-    return await this.ee.emitAsync(REGISTER_NEW_USER, userRegistrationDto);
+    const role = await this.roleRepository.findOne({ where: { name: 'user' } });
+    return await this.usersService.register(userRegistrationDto, role);
   }
 
   async login(user: User) {
@@ -43,14 +44,18 @@ export class AuthService {
       code === user.code &&
       addSeconds(new Date(), 1) < addSeconds(user.codeExpiration, 1)
     ) {
-      return await this.ee.emitAsync(VERIFIED, user);
+      return await this.usersService.updateUser(user, {
+        verified: true,
+        code: null,
+        codeExpiration: null,
+      });
     } else {
       throw new BadRequestException('Invalid or Expired code');
     }
   }
 
-  async validateUser(data: object) {
-    return await this.ee.emitAsync(VALIDATE_USER, data);
+  async validateUser(userLoginDto: UserLoginDto) {
+    return await this.usersService.validateUserData(userLoginDto);
   }
 
   async createUserToken(payload: TokenPayloadInterface) {

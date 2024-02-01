@@ -7,9 +7,16 @@ import { LocalStrategy } from './stratigies/auth.strategy';
 import { ConfigService } from '@nestjs/config';
 import { JwtModule } from '@nestjs/jwt';
 import { JwtStrategy } from './stratigies/jwt.strategy';
+import { RoleRepository } from './repositories/role.repository';
+import { PermissionRepository } from './repositories/permission.repository';
+import { DatabaseModule } from '@app/common';
+import { Role } from './entities/role.entity';
+import { Permission } from './entities/permission.entity';
 
 @Module({
   imports: [
+    DatabaseModule,
+    DatabaseModule.forFeature([Role, Permission]),
     JwtModule.registerAsync({
       useFactory: (configService: ConfigService) => ({
         secret: configService.getOrThrow<string>('JWT_SECRET'),
@@ -23,6 +30,12 @@ import { JwtStrategy } from './stratigies/jwt.strategy';
     UsersModule,
   ],
   controllers: [AuthController],
-  providers: [AuthService, LocalStrategy, JwtStrategy],
+  providers: [
+    AuthService,
+    RoleRepository,
+    PermissionRepository,
+    LocalStrategy,
+    JwtStrategy,
+  ],
 })
 export class AuthModule {}

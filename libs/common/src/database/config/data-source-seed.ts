@@ -1,13 +1,20 @@
 import { DataSource, DataSourceOptions } from 'typeorm';
 import * as path from 'path';
+import {
+  DB_HOST,
+  DB_NAME,
+  DB_PASSWORD,
+  DB_PORT,
+  DB_USERNAME,
+} from '@app/common/database/config/db';
 
 export const config: DataSourceOptions = {
-  host: process.env.DB_HOST || 'localhost',
+  host: DB_HOST,
   type: 'mysql',
-  username: process.env.DB_USER || 'root',
-  password: `${process.env.DB_PASSWORD}` || 'toor',
-  port: +process.env.DB_PORT || 3306,
-  database: process.env.DB_DATABASE || 'cashcloud',
+  username: DB_USERNAME,
+  password: DB_PASSWORD,
+  port: +DB_PORT,
+  database: DB_NAME,
   entities: [path.join('dist', 'apps', '**', '*.entity.js')],
   migrations: [path.join('libs', '**', 'seeds', '*{.js,.ts}')],
 };

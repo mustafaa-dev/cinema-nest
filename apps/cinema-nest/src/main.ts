@@ -9,10 +9,10 @@ async function bootstrap() {
   const configService = app.get(ConfigService);
   const PORT = configService.getOrThrow<number>('PORT');
   app.useLogger(app.get(Logger));
+  app.enableCors();
   app.useGlobalPipes(new ValidationPipe());
   // app.useGlobalFilters(new ApiGatewayErrorFilter());
-  // app.useGlobalGuards(new JwtGuard(new Reflector()));
   await app.listen(PORT);
 }
 
-bootstrap();
+bootstrap().then();

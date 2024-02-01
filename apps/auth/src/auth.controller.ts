@@ -16,12 +16,14 @@ import {
 import { LocalAuthGuard } from './guards/local.guard';
 import { User } from '../../users/src/entities/user.entity';
 import { JwtGuard } from './guards/jwt.guard';
+import { UserRegisterPipe } from './pipes/user-register.pipe';
 
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
   @Post('register')
+  @UsePipes(new UserRegisterPipe())
   async register(@Body() userRegistrationDto: UserRegistrationDto) {
     return await this.authService.register(userRegistrationDto);
   }

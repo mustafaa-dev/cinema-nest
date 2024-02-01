@@ -13,6 +13,7 @@ import { UserRepository } from './repositories/user.repository';
 import { User } from './entities/user.entity';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { compare } from 'bcryptjs';
+import { Role } from '../../auth/src/entities/role.entity';
 
 @Injectable()
 export class UsersService {
@@ -21,9 +22,10 @@ export class UsersService {
     private ee: EventEmitter2,
   ) {}
 
-  async register(userRegistrationDto: UserRegistrationDto) {
+  async register(userRegistrationDto: UserRegistrationDto, role: Role) {
     const newUser = new User();
     Object.assign(newUser, userRegistrationDto);
+    newUser.role = role;
     const code = parseInt(await generateNumber(6));
     newUser.code = code;
     const user = await this.userRepository.create(newUser);
@@ -48,7 +50,7 @@ export class UsersService {
   }
 
   async getUserProfileBy(filter: any) {
-    const user = await this.userRepository.findOne(filter);
+    const user = await this.userRepository.findOne({ where: filter });
     if (!user) throw new UnprocessableEntityException('User not found');
     return user;
   }

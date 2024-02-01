@@ -3,12 +3,13 @@ import { PassportStrategy } from '@nestjs/passport';
 import { ExtractJwt, Strategy } from 'passport-jwt';
 import { ConfigService } from '@nestjs/config';
 import { EventEmitter2 } from '@nestjs/event-emitter';
-import { GET_PROFILE } from '@app/common';
+import { UsersService } from '../../../users/src/users.service';
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
   constructor(
     configService: ConfigService,
+    private readonly userService: UsersService,
     private ee: EventEmitter2,
   ) {
     super({
@@ -18,6 +19,6 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
   }
 
   async validate({ userId }: any) {
-    return await this.ee.emitAsync(GET_PROFILE, { id: userId });
+    return await this.userService.getUserProfileBy({ id: userId });
   }
 }
